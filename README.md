@@ -2,7 +2,7 @@
 <insert description here>
 
 ## C++ Instructions
-I wrote this program to be compatible with c++ 11 on Linux
+I wrote this program to be compatible with Linux
 
 ## Python Instructions
 This program was tested with python 3.8
