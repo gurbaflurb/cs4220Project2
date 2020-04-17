@@ -12,10 +12,10 @@ Start up a TCP server by navigating to the `servers` directory and running `pyth
 
 ## Self-tests
 ### TCP Transfer of TestUploadFile.pdf
-![TCP Transfer Image](https://github.com/gurbaflurb/cs4220Project2/img/image1.png)
+![TCP Transfer Image](https://github.com/gurbaflurb/cs4220Project2/blob/master/img/image1.png)
 
 ### UDP Transfer of TestUploadFile.pdf
-![UDP Transfer Image](https://github.com/gurbaflurb/cs4220Project2/img/image2.png)
+![UDP Transfer Image](https://github.com/gurbaflurb/cs4220Project2/blob/master/img/image2.png)
 
 ### UDP Transfer of TestUploadFile.pdf
-![UDP Transfer Image loss of 5%](https://github.com/gurbaflurb/cs4220Project2/img/image3.png)
+![UDP Transfer Image loss of 5%](https://github.com/gurbaflurb/cs4220Project2/blob/master/img/image3.png)
