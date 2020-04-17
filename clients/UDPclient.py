@@ -2,6 +2,17 @@
 import socket
 import sys
 
+def writeFile(client):
+    file = open(transferFile, 'wb')
+    data = client.recv(1024)
+    while(True):
+        file.write(data)
+        data = client.recv(1024)
+        if(data == b''):
+            break
+
+    file.close()
+
 port = 2248
 
 if(len(sys.argv) < 3):
@@ -22,15 +33,10 @@ if(response == 'File not found'):
     exit()
 else:
     print(response)
-    file = open(transferFile, 'wb')
-    data = client.recv(1024)
-    while(True):
-        file.write(data)
-        data = client.recv(1024)
-        if(data == b''):
-            print('File downloaded!')
-            break
-
-    file.close()
-
+    writeFile(client)
+    for i in range(10):
+        client.send(transferFile.encode('utf-8'))
+        client.recv(1024)
+        writeFile(client)
+    print('File downloaded!')
 client.close()

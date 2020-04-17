@@ -16,20 +16,19 @@ server.bind((addr, port))
 
 while(True):
     data, client_conn = server.recvfrom(1024)
-    try:
+    try: 
         file = open(data.decode(), 'rb')
         server.sendto(b'File Found!', client_conn)
-        data = file.read(1024)
         while(True):
-            server.sendto(data, client_conn)
             data = file.read(1024)
             if(data == b''):
-                server.sendto(data, client_conn)
+                server.sendto(b'', client_conn)
                 break
+            server.sendto(data, client_conn)
         file.close()
     except:
         print('An error has occured!')
         server.sendto(b'File not found', client_conn)
     
-    break # remove this line to make the server run forever
+    #break # remove this line to make the server run forever
 server.close()
