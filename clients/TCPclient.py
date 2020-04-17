@@ -5,9 +5,10 @@ import sys
 port = 2248 # Specify the port for the client
 
 if(len(sys.argv) < 3): # Check to make sure enough arguments were supplied
-    print(f'Usage: {sys.argv[0]} server-addr file-name')
+    print(f'Usage: {sys.argv[0]} server-addr file-name\n')
     exit()
-addr = str(sys.argv[1])
+    
+addr = socket.gethostbyname(sys.argv[1])
 transferFile = str(sys.argv[2])
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Create a client socket and connect to the server provided
