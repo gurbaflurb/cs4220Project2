@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import socket
 import sys
+from hashlib import md5
 
 def writeFile(client):
     file = open(transferFile, 'wb')
@@ -12,6 +13,12 @@ def writeFile(client):
             break
 
     file.close()
+
+def getNewFileHash(fileName):
+    hasher = md5()
+    with open(fileName, 'rb') as file:
+        hasher.update(file.read())
+    return hasher.hexdigest()
 
 port = 2248
 
@@ -26,17 +33,20 @@ client.connect((addr, port))
 
 client.send(transferFile.encode('utf-8'))
 
-response = client.recv(1024).decode()
-if(response == 'File not found'):
+fileHash = client.recv(1024).decode()
+if(fileHash == 'File not found'):
     print('Server failed to find file!')
     client.close()
     exit()
 else:
-    print(response)
+    print(f'File found! MD5 Hash:{fileHash}')
     writeFile(client)
-    for i in range(10):
+    currentHash = getNewFileHash(transferFile)
+        
+    while(fileHash != currentHash):
         client.send(transferFile.encode('utf-8'))
         client.recv(1024)
         writeFile(client)
+        currentHash = getNewFileHash(transferFile)
     print('File downloaded!')
 client.close()
