@@ -1,48 +1,46 @@
 #!/usr/bin/python3
 import socket
 import sys
+import pickle
 from random import randint
-from hashlib import md5
-
-def getNewFileHash(fileName):
-    hasher = md5()
-    with open(fileName, 'rb') as file:
-        hasher.update(file.read())
-    return hasher.hexdigest()
 
 def main():
-    port = 2248
-    addr = '0.0.0.0'
-
     if(len(sys.argv) < 2):
         print(f'Usage: {sys.argv[0]} <loss_percent>\n')
         exit()
 
-    loss_chance = int(sys.argv[1])
+    loss_percent = int(sys.argv[1])
+    port = 2248
+    addr = '0.0.0.0'
 
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server.bind((addr, port))
 
-    while(True):
+    while True:
         data, client_conn = server.recvfrom(1024)
-        try: 
-            fileHash = getNewFileHash(data.decode())
-            server.sendto(fileHash.encode('utf-8'), client_conn)
+        try:
             with open(data.decode(), 'rb') as file:
-                while(True):
-                    # Randomly drop packets
-                    rand = randint(0,100)
-                    if(rand < loss_chance):
-                        data = file.read(1024)
-                    data = file.read(1024)
-                    if(data == b''):
-                        server.sendto(b'', client_conn)
+                buffer = {}
+                seq = 1
+                while True:
+                    packet_data = file.read(1024)
+                    if(packet_data == b''):
                         break
+                    else:
+                        buffer[seq] = {'seq':seq, 'data':packet_data}
+                        seq += 1
+                print(f'Packets to be sent: {seq-1}')
+                server.sendto(str((seq-1)).encode('utf-8'), client_conn)
+                for i in range(1, seq):
+                    rand = randint(0, 100)
+                    if(rand < loss_percent):
+                        continue
+                    data = pickle.dumps(buffer[i])
                     server.sendto(data, client_conn)
-        except Exception as e:
-            print(f'An error has occured!\n {e}')
-            server.sendto(b'File not found', client_conn)
-
+                server.sendto(b'', client_conn)
+        except:
+            print('An error has occured')
+            server.sendto(b'an error has occured', client_conn)
     server.close()
 
 if __name__ == "__main__":
