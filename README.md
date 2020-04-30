@@ -1,5 +1,6 @@
 # CS 4220 Project 2
 - Author: Sean Chen
+- github link: https://github.com/gurbaflurb/cs4220Project2
 - I wrote this program in python 3 and tested it with python 3.8
 - Note, this will not work on the linux servers available to use (blanca, windom, etc.) becuase they do not have python 3 installed.
 
