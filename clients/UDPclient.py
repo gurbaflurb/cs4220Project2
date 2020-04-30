@@ -3,6 +3,12 @@ import socket
 import sys
 import pickle
 
+def logInfo(message):
+    assert isinstance(message, str)
+
+    with open('UDPRestransmission.log', 'a') as file:
+        file.write(message+'\n')
+
 def writeFile(fileName, fileData, totalPackets):
     assert isinstance(fileName, str)
     assert isinstance(fileData, dict)
@@ -41,9 +47,11 @@ def main():
                 for i in range(1, int(response)+1):
                     if (i not in fileData):
                         print(f'Missing Packet(s) {i}')
+                        logInfo(f'Missing Packet(s) {i}')
                         is_buffer_filled = False
                 if(not is_buffer_filled):
                     print('Re-requesting file and saving what we got!')
+                    logInfo('Re-requesting file and saving what we got!')
                     client.send(fileRequested.encode('utf-8'))
                     response = client.recv(2048).decode()
                 else:
